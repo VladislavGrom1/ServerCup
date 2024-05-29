@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseOperator } from '../api/database.operator';
-import { Statement } from 'better-sqlite3';
 import { InsertOneRecord } from './dtos/insert-one-record.dto';
 import { Mapper } from './dtos/mapper';
 import { UpdateOneRecord } from './dtos/update-one-record.dto';
 import { GetOneRecord } from './dtos/get-one-record.dto';
 
+
+export interface IRecordService {
+  getOneRecord(id:number): GetOneRecord;
+  getAllRecords(): Array<GetOneRecord>;
+  deleteOneRecord(id:number) ;
+  deleteAllRecords() ;
+  insertOneRecord(record:InsertOneRecord);
+  updateOneRecord(id:number, record:UpdateOneRecord);
+}
+
 @Injectable()
-export class RecordService {
+export class SQLiteRecordService implements IRecordService {
   dbo: DatabaseOperator;
   constructor() {
     this.dbo = new DatabaseOperator('db.db');

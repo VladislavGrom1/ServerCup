@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Param, HttpCode, HttpStatus, Body, Delete, Patch } from '@nestjs/common';
-import { RecordService } from './record.service';
+import { Controller, Get, Post, Param, HttpCode, HttpStatus, Body, Delete, Patch, Inject } from '@nestjs/common';
+import { IRecordService } from './record.service';
 import { InsertOneRecord } from './dtos/insert-one-record.dto';
 import { UpdateOneRecord } from './dtos/update-one-record.dto';
-import { Statement } from 'better-sqlite3';
 import { GetOneRecord } from './dtos/get-one-record.dto';
 
 
@@ -10,7 +9,10 @@ import { GetOneRecord } from './dtos/get-one-record.dto';
 
 @Controller('records')
 export class RecordController {
-  constructor(private readonly recordService: RecordService) {}
+  constructor(
+    @Inject("RecordService")
+    private readonly recordService: IRecordService
+  ) { }
 
 
   @Get('getOneRecord:id')
@@ -27,7 +29,7 @@ export class RecordController {
 
   @Post('insertOneRecord')
   @HttpCode(HttpStatus.CREATED)
-  insertOneRecord(@Body() insert: InsertOneRecord){
+  insertOneRecord(@Body() insert: InsertOneRecord) {
     return this.recordService.insertOneRecord(insert);
   }
 
@@ -39,15 +41,15 @@ export class RecordController {
 
   @Delete('deleteAllRecords')
   @HttpCode(204)
-  deleteAllRecords(){
+  deleteAllRecords() {
     this.recordService.deleteAllRecords();
   }
 
   @Patch('updateOneRecord:id')
   @HttpCode(204)
-  updateOneRecord(@Param('id') id: number, @Body() update: UpdateOneRecord){
+  updateOneRecord(@Param('id') id: number, @Body() update: UpdateOneRecord) {
     this.recordService.updateOneRecord(id, update)
-    
+
   }
 
 }
