@@ -3,15 +3,16 @@ import { RecordService } from './record.service';
 import { InsertOneRecord } from './dtos/insert-one-record.dto';
 import { UpdateOneRecord } from './dtos/update-one-record.dto';
 
+
+//TODO: Тебе нужно почитать, как выдавать статус при отсутствии данных
+
 @Controller('records')
 export class RecordController {
   constructor(private readonly recordService: RecordService) {}
 
-
-
   @Get('getOneRecord:id')
   getOneRecord(@Param('id') id: number): string {
-    return "";
+    return this.recordService.getOneRecord(id);
   }
 
   @Get('getAllRecords')
@@ -28,13 +29,13 @@ export class RecordController {
   @Delete('deleteOneRecord:id')
   @HttpCode(204)
   deleteOneRecord(@Param('id') id: number) {
-    
+    this.recordService.deleteOneRecord(id);
   }
 
   @Delete('deleteAllRecords')
   @HttpCode(204)
   deleteAllRecords(){
-
+    this.recordService.deleteAllRecords()
   }
 
   @Patch(":id")
